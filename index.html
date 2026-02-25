@@ -634,6 +634,61 @@
         font-size: 0.78rem;
       }
 
+      .fip-points {
+        display: inline-block;
+        background: #fff3e0;
+        color: #e65100;
+        padding: 0.1rem 0.45rem;
+        border-radius: 4px;
+        font-weight: 700;
+        font-size: 0.78rem;
+        letter-spacing: 0.2px;
+      }
+      .card[data-level="fip-gold"] .fip-points {
+        background: var(--gold-bg);
+        color: #8b7000;
+      }
+      .card[data-level="fip-silver"] .fip-points {
+        background: var(--silver-bg);
+        color: #4a4e69;
+      }
+      .card[data-level="fip-bronze"] .fip-points {
+        background: var(--bronze-bg);
+        color: #8b5e20;
+      }
+      .card[data-level="c10k"] .fip-points {
+        background: var(--c10k-bg);
+        color: var(--c10k);
+      }
+      .card[data-level="c5k"] .fip-points {
+        background: var(--c5k-bg);
+        color: var(--c5k);
+      }
+      .card[data-level="c2k"] .fip-points {
+        background: var(--c2k-bg);
+        color: var(--c2k);
+      }
+      .card[data-level="veterans"] .fip-points {
+        background: var(--veterans-bg);
+        color: var(--veterans);
+      }
+      .card[data-level="masters"] .fip-points {
+        background: var(--masters-bg);
+        color: #9e6d00;
+      }
+      .card[data-level="national"] .fip-points {
+        background: var(--national-bg);
+        color: var(--national);
+      }
+      .card[data-level="regional"] .fip-points {
+        background: var(--regional-bg);
+        color: var(--regional);
+      }
+      .card[data-level="fip-promises"] .fip-points {
+        background: var(--promises-bg);
+        color: var(--promises);
+      }
+
       .card-cats {
         margin-top: 0.5rem;
         font-size: 0.72rem;
@@ -1082,6 +1137,7 @@
           date: "4 a 8 Fev",
           name: "FIP Bronze Madeira",
           level: "fip-bronze",
+          fipPoints: 10000,
           cats: "F2-F6; M2-M6 / FIP M&F",
           prize: "10.000€",
           location: "Madeira",
@@ -1132,6 +1188,7 @@
           date: "20 a 22 Fev",
           name: "The Gentlemen's & Ladies Crew By Claranet",
           level: "veterans",
+          points: 10000,
           cats: "VET M&F +35 a +60",
           prize: "3.000€",
           location: "Lisboa",
@@ -1174,6 +1231,7 @@
           date: "2 a 8 Mar",
           name: "FIP Gold Açores",
           level: "fip-gold",
+          fipPoints: 50000,
           cats: "FIP M&F",
           prize: "50.000€",
           location: "Açores - São Miguel",
@@ -1244,6 +1302,7 @@
           date: "13 a 15 Mar",
           name: "Gentlemen's & Ladies Crew by Axians",
           level: "veterans",
+          points: 10000,
           cats: "VET M&F +35 a +60",
           prize: "3.000€",
           location: "Lisboa",
@@ -1284,6 +1343,7 @@
           date: "25 a 29 Mar",
           name: "FIP Silver Viseu",
           level: "fip-silver",
+          fipPoints: 10000,
           cats: "F2-F6; M2-M6 / FIP M&F",
           prize: "18.000€",
           location: "Viseu",
@@ -1386,6 +1446,7 @@
           date: "21 a 26 Abr",
           name: "FIP Bronze Setúbal",
           level: "fip-bronze",
+          fipPoints: 10000,
           cats: "F2-F6; M2-M6 / FIP M&F",
           prize: "10.000€",
           location: "Setúbal",
@@ -1426,6 +1487,7 @@
           date: "24 a 26 Abr",
           name: "VIII Torneio Veteranos My Padel Center",
           level: "veterans",
+          points: 10000,
           cats: "VET M&F +35 a +60",
           prize: "3.000€",
           location: "Mafra",
@@ -1436,6 +1498,7 @@
           date: "29 Abr a 3 Mai",
           name: "FIP Silver Leiria",
           level: "fip-silver",
+          fipPoints: 25000,
           cats: "F2-F6; M2-M6 / FIP M&F",
           prize: "25.000€",
           location: "Leiria",
@@ -1458,6 +1521,7 @@
           date: "1 a 3 Mai",
           name: "Portimão Padel Veteranos",
           level: "veterans",
+          points: 25000,
           cats: "VET M&F +35 a +60",
           prize: "7.500€",
           location: "Portimão",
@@ -1468,6 +1532,7 @@
           date: "4 a 10 Mai",
           name: "FIP Silver VRSA",
           level: "fip-silver",
+          fipPoints: 10000,
           cats: "FIP M&F",
           prize: "18.000€",
           location: "Vila Real de Sto. António",
@@ -1528,6 +1593,7 @@
           date: "19 a 24 Mai",
           name: "FIP Silver Oeiras",
           level: "fip-silver",
+          fipPoints: 10000,
           cats: "F2-F6; M2-M6 / FIP M&F",
           prize: "18.000€",
           location: "Oeiras",
@@ -1558,6 +1624,7 @@
           date: "22 a 24 Mai",
           name: "The Campus Veteranos",
           level: "veterans",
+          points: 10000,
           cats: "VET M&F +35 a +60",
           prize: "3.000€",
           location: "Quinta do Lago",
@@ -1590,6 +1657,7 @@
           date: "3 a 7 Jun",
           name: "FIP Bronze Porto",
           level: "fip-bronze",
+          fipPoints: 10000,
           cats: "F2-F6; M2-M6 / FIP M&F",
           prize: "10.000€",
           location: "Porto",
@@ -1630,6 +1698,7 @@
           date: "5 a 7 Jun",
           name: "Open D'Ouro Padel Veteranos",
           level: "veterans",
+          points: 10000,
           cats: "VET M&F +35 a +60",
           prize: "3.000€",
           location: "Porto",
@@ -1700,6 +1769,7 @@
           date: "16 a 21 Jun",
           name: "FIP Bronze São João da Madeira",
           level: "fip-bronze",
+          fipPoints: 10000,
           cats: "F2-F6; M2-M6 / FIP M&F",
           prize: "10.000€",
           location: "São João da Madeira",
@@ -1720,6 +1790,7 @@
           date: "19 a 21 Jun",
           name: "Gentlemen's & Ladies Crew Vilamoura",
           level: "veterans",
+          points: 10000,
           cats: "VET M&F +35 a +60",
           prize: "3.000€",
           location: "Vilamoura",
@@ -1762,6 +1833,7 @@
           date: "8 a 12 Jul",
           name: "FIP Bronze Ericeira",
           level: "fip-bronze",
+          fipPoints: 10000,
           cats: "F2-F6; M2-M6 / FIP M&F",
           prize: "10.000€",
           location: "Ericeira",
@@ -1852,6 +1924,7 @@
           date: "24 a 26 Jul",
           name: "FIP Silver Porto",
           level: "fip-silver",
+          fipPoints: 25000,
           cats: "F2-F6; M2-M6 / FIP M&F",
           prize: "25.000€",
           location: "Porto",
@@ -1882,6 +1955,7 @@
           date: "24 a 26 Jul",
           name: "Gentlemen's & Ladies Crew by Dezporvinte",
           level: "veterans",
+          points: 10000,
           cats: "VET M&F +35 a +60",
           prize: "3.000€",
           location: "Santarém",
@@ -1934,6 +2008,7 @@
           date: "5 a 9 Ago",
           name: "FIP Bronze Portimão",
           level: "fip-bronze",
+          fipPoints: 10000,
           cats: "F2-F6; M2-M6 / FIP M&F",
           prize: "10.000€",
           location: "Portimão",
@@ -1976,6 +2051,7 @@
           date: "1 a 6 Set",
           name: "FIP Bronze Ericeira",
           level: "fip-bronze",
+          fipPoints: 10000,
           cats: "F2-F6; M2-M6 / FIP M&F",
           prize: "10.000€",
           location: "Ericeira",
@@ -2016,6 +2092,7 @@
           date: "4 a 6 Set",
           name: "II Open Veteranos GoEnergy",
           level: "veterans",
+          points: 10000,
           cats: "VET M&F +35 a +60",
           prize: "3.000€",
           location: "Lagos",
@@ -2026,6 +2103,7 @@
           date: "7 a 13 Set",
           name: "FIP Silver Caldas",
           level: "fip-silver",
+          fipPoints: 10000,
           cats: "F2-F6; M2-M6 / FIP M&F",
           prize: "18.000€",
           location: "Caldas da Rainha",
@@ -2086,6 +2164,7 @@
           date: "14 a 20 Set",
           name: "FIP Silver Guimarães",
           level: "fip-silver",
+          fipPoints: 10000,
           cats: "F2-F6; M2-M6 / FIP M&F",
           prize: "18.000€",
           location: "Guimarães",
@@ -2116,6 +2195,7 @@
           date: "25 a 27 Set",
           name: "FIP Silver São João da Madeira",
           level: "fip-silver",
+          fipPoints: 10000,
           cats: "F2-F6; M2-M6 / FIP M&F",
           prize: "18.000€",
           location: "São João da Madeira",
@@ -2158,6 +2238,7 @@
           date: "2 a 4 Out",
           name: "FIP Bronze Almeirim",
           level: "fip-bronze",
+          fipPoints: 10000,
           cats: "F2-F6; M2-M6 / FIP M&F",
           prize: "10.000€",
           location: "Almeirim",
@@ -2208,6 +2289,7 @@
           date: "13 a 18 Out",
           name: "FIP Bronze Oeiras",
           level: "fip-bronze",
+          fipPoints: 10000,
           cats: "F2-F6; M2-M6 / FIP M&F",
           prize: "10.000€",
           location: "Oeiras",
@@ -2330,6 +2412,7 @@
           date: "9 a 15 Nov",
           name: "FIP Silver Porto",
           level: "fip-silver",
+          fipPoints: 10000,
           cats: "F2-F6; M2-M6 / FIP M&F",
           prize: "18.000€",
           location: "Porto",
@@ -2518,9 +2601,35 @@
           card.className = "card";
           card.dataset.level = t.level;
           card.dataset.month = month;
-          const prizeHtml = t.prize
-            ? `<span class="prize">${t.prize}</span>`
+
+          // Determine points (CLASSE) and prize money separately
+          let pointsNum = null;
+          let prizeMoney = null;
+          const levelPts = { c2k: 2000, c5k: 5000, c10k: 10000 };
+
+          if (t.fipPoints) {
+            pointsNum = t.fipPoints;
+            if (t.prize) prizeMoney = t.prize;
+          } else if (t.points != null) {
+            pointsNum = t.points;
+            prizeMoney = t.prizeMoney || (t.prize && t.prize.includes("\u20AC") ? t.prize : null);
+          } else if (t.prize) {
+            if (t.prize.includes("\u20AC")) {
+              prizeMoney = t.prize;
+              if (levelPts[t.level]) pointsNum = levelPts[t.level];
+            } else {
+              const v = parseInt(t.prize.replace(/\./g, "").replace(/[^\d]/g, ""));
+              if (!isNaN(v) && v > 0) pointsNum = v;
+            }
+          }
+
+          const pointsHtml = pointsNum
+            ? `<span class="fip-points">${pointsNum.toLocaleString("pt-PT")} pts</span>`
             : "";
+          const prizeHtml = prizeMoney
+            ? `<span class="prize">${prizeMoney}</span>`
+            : "";
+
           card.innerHTML = `
       <div class="card-top">
         <div class="card-name">${t.name}</div>
@@ -2529,6 +2638,7 @@
       <div class="card-details">
         <div class="card-detail">${svgCalendar}<span>${t.date}</span></div>
         <div class="card-detail">${svgPin}<span>${t.location}</span></div>
+        ${pointsHtml ? `<div class="card-detail">${pointsHtml}</div>` : ""}
         ${prizeHtml ? `<div class="card-detail">${prizeHtml}</div>` : ""}
       </div>
       ${t.cats ? `<div class="card-cats"><strong>Categorias:</strong> ${t.cats}</div>` : ""}
@@ -2650,12 +2760,22 @@
           "badge-club": styles.getPropertyValue("--club").trim(),
         };
         let popupHtml = `<div style="font-family:Inter,-apple-system,sans-serif"><strong style="font-size:1rem;display:block;margin-bottom:0.5rem;color:#1a1a2e">${locName}</strong><div class="popup-scroll">`;
+        const popupLevelPts = { c2k: 2000, c5k: 5000, c10k: 10000 };
         group.tournaments.forEach((t) => {
           const bc = badgeClass[t.level];
+          let pPts = null, pPrize = null;
+          if (t.fipPoints) { pPts = t.fipPoints; if (t.prize) pPrize = t.prize; }
+          else if (t.points != null) { pPts = t.points; pPrize = t.prizeMoney || (t.prize && t.prize.includes("\u20AC") ? t.prize : null); }
+          else if (t.prize) {
+            if (t.prize.includes("\u20AC")) { pPrize = t.prize; if (popupLevelPts[t.level]) pPts = popupLevelPts[t.level]; }
+            else { const v = parseInt(t.prize.replace(/\./g, "").replace(/[^\d]/g, "")); if (!isNaN(v) && v > 0) pPts = v; }
+          }
+          const pPtsStr = pPts ? ` &mdash; <strong>${pPts.toLocaleString("pt-PT")} pts</strong>` : "";
+          const pPrizeStr = pPrize ? ` &mdash; <span class="popup-prize">${pPrize}</span>` : "";
           popupHtml += `<div class="popup-tournament">
       <div class="popup-name">${t.name}</div>
       <span class="popup-badge" style="background:${bgMap[bc]};color:${colMap[bc]}">${levelLabels[t.level]}</span>
-      <div class="popup-detail">${t.date}${t.prize ? ` &mdash; <span class="popup-prize">${t.prize}</span>` : ""}</div>
+      <div class="popup-detail">${t.date}${pPtsStr}${pPrizeStr}</div>
       ${t.cats ? `<div class="popup-detail" style="font-size:0.68rem;opacity:0.8">${t.cats}</div>` : ""}
       ${t.org ? `<div class="popup-detail" style="font-size:0.68rem;opacity:0.8">${t.org}</div>` : ""}
     </div>`;
