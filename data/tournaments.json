@@ -657,6 +657,16 @@
   },
   {
     "month": "Junho",
+    "date": "19 a 21 Jun",
+    "name": "Open Jovem Villae Verdasca",
+    "level": "c5k",
+    "cats": "M&F: S12, S14, S16, S18",
+    "prize": "5.000",
+    "location": "Braga",
+    "org": "Villae Verdasca"
+  },
+  {
+    "month": "Junho",
     "date": "26 a 28 Jun",
     "name": "Qualifying Camp. Nacional Absoluto",
     "level": "national",
