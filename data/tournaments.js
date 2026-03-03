@@ -1,4 +1,4 @@
-[
+window.tournamentsData = [
   {
     "month": "Fevereiro",
     "date": "4 a 8 Fev",
@@ -1337,4 +1337,4 @@
     "location": "A definir",
     "org": "FPP"
   }
-]
+];

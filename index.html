@@ -1036,7 +1036,8 @@
       </svg>
     </button>
 
-    <script type="module">
+    <script src="./data/tournaments.js"></script>
+    <script>
       // --- Theme Toggle ---
       const themeToggle = document.getElementById("themeToggle");
       const sunIcon = document.getElementById("sunIcon");
@@ -1130,26 +1131,9 @@
         club: "#37474F",
       };
 
-      const loadTournaments = async () => {
-        const response = await fetch("./data/tournaments.json");
-        if (!response.ok) {
-          throw new Error("Não foi possível carregar tournaments.json");
-        }
-        return response.json();
-      };
-
-      let tournaments = [];
-      try {
-        tournaments = await loadTournaments();
-      } catch (error) {
-        console.error(error);
-        const noResults = document.getElementById("noResults");
-        noResults.style.display = "block";
-        noResults.textContent =
-          window.location.protocol === "file:"
-            ? "Não foi possível carregar os torneios em modo file://. Inicia um servidor local (ex: python -m http.server 5500) e abre http://localhost:5500/."
-            : "Não foi possível carregar os torneios neste momento.";
-      }
+      const tournaments = Array.isArray(window.tournamentsData)
+        ? window.tournamentsData
+        : [];
 
       const levelLabels = {
         all: "Todos",
