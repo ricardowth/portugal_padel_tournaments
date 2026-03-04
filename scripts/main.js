@@ -188,10 +188,77 @@ const getTournamentDate = (tournament) => {
   return `${startDay} ${monthShortPt[start.getMonth()]} a ${endDay} ${monthShortPt[endMonth]}`;
 };
 
+const getTournamentTimeStatus = (tournament) => {
+  const start = parseIsoDate(tournament.start_date);
+  const end = parseIsoDate(tournament.end_date);
+  if (!start || !end) return "";
+
+  const now = new Date();
+  const startTime = new Date(start);
+  startTime.setHours(0, 0, 0, 0);
+
+  const endTime = new Date(end);
+  endTime.setHours(23, 59, 59, 999);
+
+  if (now < startTime) return "";
+  if (now > endTime) return "finished";
+  return "live";
+};
+
 const getTournamentOrg = (tournament) => tournament.organization || "";
 
 const getTournamentAgeGroup = (tournament) =>
   String(tournament.age_group || "").toLowerCase();
+
+const getTournamentLevel = (tournament) => {
+  const fipLevel = String(tournament?.fip_data?.level || "").trim();
+  if (fipLevel) return fipLevel;
+
+  const fppLevel = String(tournament?.fpp_data?.level || "").trim();
+  if (fppLevel) return fppLevel;
+
+  return "";
+};
+
+const getLevelLabel = (level) => levelLabels[level] || "Sem nível";
+const getLevelBadgeClass = (level) => badgeClass[level] || "badge-club";
+
+const hasValue = (value) => {
+  if (value === null || value === undefined) return false;
+  if (typeof value === "string") return value.trim() !== "";
+  return true;
+};
+
+const buildSourceInfo = (sourceLabel, sourceData) => {
+  if (!sourceData || typeof sourceData !== "object") return "";
+
+  const parts = [];
+  if (hasValue(sourceData.level)) {
+    const levelKey = String(sourceData.level).trim();
+    parts.push(`Nível: ${getLevelLabel(levelKey)}`);
+  }
+  if (hasValue(sourceData.points)) {
+    const points = typeof sourceData.points === "number"
+      ? sourceData.points.toLocaleString("pt-PT")
+      : sourceData.points;
+    parts.push(`Pontos: ${points}`);
+  }
+  if (hasValue(sourceData.categories)) parts.push(`Categorias: ${sourceData.categories}`);
+  const hasMainInfo = parts.length > 0;
+  const hasLink = hasValue(sourceData.link);
+
+  if (!hasMainInfo && !hasLink) return "";
+
+  const mainInfoHtml = hasMainInfo
+    ? `<div><strong>${sourceLabel}:</strong> ${parts.join(" · ")}</div>`
+    : `<div><strong>${sourceLabel}:</strong></div>`;
+
+  const linkHtml = hasLink
+    ? `<div><a href="${sourceData.link}" target="_blank" rel="noopener noreferrer">Inscrições / Resultados</a></div>`
+    : "";
+
+  return `<div class="card-cats">${mainInfoHtml}${linkHtml}</div>`;
+};
 
 const filterMatchesByCats = (tournament, filterKey) => {
   const age = getTournamentAgeGroup(tournament);
@@ -277,9 +344,11 @@ months.forEach((month) => {
   grid.className = "tournament-grid";
 
   mt.forEach((t) => {
+    const level = getTournamentLevel(t);
+    const timeStatus = getTournamentTimeStatus(t);
     const card = document.createElement("div");
     card.className = "card";
-    card.dataset.level = t.level;
+    card.dataset.level = level;
     card.dataset.month = getTournamentMonth(t);
     card.dataset.ageGroup = getTournamentAgeGroup(t);
 
@@ -297,7 +366,7 @@ months.forEach((month) => {
     } else if (t.prize) {
       if (t.prize.includes("\u20AC")) {
         prizeMoney = t.prize;
-        if (levelPts[t.level]) pointsNum = levelPts[t.level];
+        if (levelPts[level]) pointsNum = levelPts[level];
       } else {
         const v = parseInt(t.prize.replace(/\./g, "").replace(/[^\d]/g, ""));
         if (!isNaN(v) && v > 0) pointsNum = v;
@@ -310,20 +379,29 @@ months.forEach((month) => {
     const prizeHtml = prizeMoney
       ? `<span class="prize">${prizeMoney}</span>`
       : "";
+    const statusLabel = timeStatus === "live" ? "A decorrer" : "Finalizado";
+    const statusBarHtml = timeStatus
+      ? `<div class="card-status-bar card-status-${timeStatus}">${statusLabel}</div>`
+      : "";
+    const org = getTournamentOrg(t);
+    const cardFooterHtml = `
+<div class="card-footer-details">
+  ${org ? `<div class="card-detail">${svgOrg}<span style="font-size:0.75rem">${org}</span></div>` : ""}
+</div>`;
 
     card.innerHTML = `
 <div class="card-top">
   <div class="card-name">${t.name}</div>
-  <span class="badge ${badgeClass[t.level]}">${levelLabels[t.level]}</span>
+  <span class="badge ${getLevelBadgeClass(level)}">${getLevelLabel(level)}</span>
 </div>
 <div class="card-details">
   <div class="card-detail">${svgCalendar}<span>${getTournamentDate(t)}</span></div>
   <div class="card-detail">${svgPin}<span>${t.location}</span></div>
-  ${pointsHtml ? `<div class="card-detail">${pointsHtml}</div>` : ""}
-  ${prizeHtml ? `<div class="card-detail">${prizeHtml}</div>` : ""}
-</div>
-${t.cats ? `<div class="card-cats"><strong>Categorias:</strong> ${t.cats}</div>` : ""}
-${getTournamentOrg(t) ? `<div class="card-details" style="margin-top:0.4rem"><div class="card-detail">${svgOrg}<span style="font-size:0.75rem">${getTournamentOrg(t)}</span></div></div>` : ""}
+  ${prizeHtml ? `<div class="card-detail">${prizeHtml}</div>` : ""}</div>
+${buildSourceInfo("FIP", t.fip_data)}
+${buildSourceInfo("FPP", t.fpp_data)}
+${cardFooterHtml}
+${statusBarHtml}
     `;
     grid.appendChild(card);
   });
@@ -334,7 +412,7 @@ ${getTournamentOrg(t) ? `<div class="card-details" style="margin-top:0.4rem"><di
 // --- Stats ---
 document.getElementById("totalCount").textContent = tournaments.length;
 document.getElementById("fipCount").textContent = tournaments.filter(
-  (t) => t.level.startsWith("fip-"),
+  (t) => getTournamentLevel(t).startsWith("fip-"),
 ).length;
 document.getElementById("visibleCount").textContent = tournaments.length;
 
@@ -395,8 +473,9 @@ Object.entries(locationGroups).forEach(([locName, group]) => {
   ];
   let bestTier = "club";
   group.tournaments.forEach((t) => {
-    if (tierOrder.indexOf(t.level) < tierOrder.indexOf(bestTier))
-      bestTier = t.level;
+    const level = getTournamentLevel(t);
+    if (tierOrder.indexOf(level) < tierOrder.indexOf(bestTier))
+      bestTier = level;
   });
   const color = levelColors[bestTier] || "#1565C0";
 
@@ -443,19 +522,20 @@ Object.entries(locationGroups).forEach(([locName, group]) => {
   let popupHtml = `<div style="font-family:Inter,-apple-system,sans-serif"><strong style="font-size:1rem;display:block;margin-bottom:0.5rem;color:#1a1a2e">${locName}</strong><div class="popup-scroll">`;
   const popupLevelPts = { c2k: 2000, c5k: 5000, c10k: 10000 };
   group.tournaments.forEach((t) => {
-    const bc = badgeClass[t.level];
+    const level = getTournamentLevel(t);
+    const bc = getLevelBadgeClass(level);
     let pPts = null, pPrize = null;
     if (t.fipPoints) { pPts = t.fipPoints; if (t.prize) pPrize = t.prize; }
     else if (t.points != null) { pPts = t.points; pPrize = t.prizeMoney || (t.prize && t.prize.includes("\u20AC") ? t.prize : null); }
     else if (t.prize) {
-      if (t.prize.includes("\u20AC")) { pPrize = t.prize; if (popupLevelPts[t.level]) pPts = popupLevelPts[t.level]; }
+      if (t.prize.includes("\u20AC")) { pPrize = t.prize; if (popupLevelPts[level]) pPts = popupLevelPts[level]; }
       else { const v = parseInt(t.prize.replace(/\./g, "").replace(/[^\d]/g, "")); if (!isNaN(v) && v > 0) pPts = v; }
     }
     const pPtsStr = pPts ? ` &mdash; <strong>${pPts.toLocaleString("pt-PT")} pts</strong>` : "";
     const pPrizeStr = pPrize ? ` &mdash; <span class="popup-prize">${pPrize}</span>` : "";
     popupHtml += `<div class="popup-tournament">
 <div class="popup-name">${t.name}</div>
-<span class="popup-badge" style="background:${bgMap[bc]};color:${colMap[bc]}">${levelLabels[t.level]}</span>
+    <span class="popup-badge" style="background:${bgMap[bc]};color:${colMap[bc]}">${getLevelLabel(level)}</span>
 <div class="popup-detail">${getTournamentDate(t)}${pPtsStr}${pPrizeStr}</div>
 ${t.cats ? `<div class="popup-detail" style="font-size:0.68rem;opacity:0.8">${t.cats}</div>` : ""}
 ${getTournamentOrg(t) ? `<div class="popup-detail" style="font-size:0.68rem;opacity:0.8">${getTournamentOrg(t)}</div>` : ""}
@@ -464,7 +544,7 @@ ${getTournamentOrg(t) ? `<div class="popup-detail" style="font-size:0.68rem;opac
   popupHtml += "</div></div>";
 
   marker.bindPopup(popupHtml, { maxWidth: 300, maxHeight: 320 });
-  marker._tournamentLevels = group.tournaments.map((t) => t.level);
+  marker._tournamentLevels = group.tournaments.map((t) => getTournamentLevel(t));
   marker._locationName = locName;
   marker._tournaments = group.tournaments;
   marker.addTo(map);
@@ -527,20 +607,20 @@ function applyFilters() {
   let visibleCount = 0;
   document.querySelectorAll(".card").forEach((card) => {
     const monthIdx = displayMonths.indexOf(card.dataset.month);
-    let show = monthIdx >= from && monthIdx <= to;
+    const isInMonthRange = monthIdx >= from && monthIdx <= to;
+    let show = isInMonthRange;
 
-    // Apply level/category filters
-    if (show) {
-      show = isAll || activeFilters.has(card.dataset.level);
-    }
-
-    // Check category filters
-    if (!show && activeFilters.size > 0) {
+    // Apply level/category filters (always respecting month range)
+    if (show && !isAll) {
       const ageGroup = card.dataset.ageGroup;
-      if (activeFilters.has("absolutos") && ageGroup === "abs") show = true;
-      if (activeFilters.has("veteranos") && ageGroup === "vet") show = true;
-      if (activeFilters.has("jovens") && ageGroup === "jov") show = true;
-      if (activeFilters.has("fip-only") && ageGroup === "none") show = true;
+      const levelMatch = activeFilters.has(card.dataset.level);
+      const categoryMatch =
+        (activeFilters.has("absolutos") && ageGroup === "abs") ||
+        (activeFilters.has("veteranos") && ageGroup === "vet") ||
+        (activeFilters.has("jovens") && ageGroup === "jov") ||
+        (activeFilters.has("fip-only") && ageGroup === "none");
+
+      show = levelMatch || categoryMatch;
     }
 
     // Apply search filter
@@ -580,7 +660,7 @@ function applyFilters() {
     // Apply level/category filters
     if (hasMatch && !isAll) {
       hasMatch = locTournamentsInRange.some((t) => {
-        if (activeFilters.has(t.level)) return true;
+        if (activeFilters.has(getTournamentLevel(t))) return true;
         if (activeFilters.has("absolutos") && filterMatchesByCats(t, "absolutos")) return true;
         if (activeFilters.has("veteranos") && filterMatchesByCats(t, "veteranos")) return true;
         if (activeFilters.has("jovens") && filterMatchesByCats(t, "jovens")) return true;
