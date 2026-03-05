@@ -11,23 +11,8 @@
     <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
     <link rel="stylesheet" href="./styles/main.css" />
   </head>
-  <body>
-    <div class="header">
-      <div class="header-content">
-        <div class="header-text">
-          <h1>Padel Portugal</h1>
-          <div class="header-subtitle">
-            Calendário 2026
-          </div>
-          <nav class="header-menu" aria-label="Menu principal">
-            <a class="header-menu-link" href="./content/points-calculator.html"
-              >Calculadora de Pontos</a
-            >
-          </nav>
-        </div>
-        <div class="header-year">2026</div>
-      </div>
-    </div>
+  <body data-page="calendar">
+    <div id="sharedHeader"></div>
 
     <div class="stats-bar" id="statsBar">
       <div class="stat">
@@ -229,6 +214,7 @@
       </svg>
     </button>
 
+    <script src="./scripts/shared-header.js"></script>
     <script src="./data/tournaments.js"></script>
     <script src="./scripts/main.js"></script>
 

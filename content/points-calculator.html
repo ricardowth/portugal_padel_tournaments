@@ -6,21 +6,8 @@
     <title>Calculadora de Pontos - Padel Portugal</title>
     <link rel="stylesheet" href="../styles/main.css" />
   </head>
-  <body>
-    <div class="header">
-      <div class="header-content">
-        <div class="header-text">
-          <h1>Padel Portugal</h1>
-          <div class="header-subtitle">
-            Calculadora de Pontos
-          </div>
-          <nav class="header-menu" aria-label="Menu principal">
-            <a class="header-menu-link" href="../index.html">Calendário</a>
-          </nav>
-        </div>
-        <div class="header-year">2026</div>
-      </div>
-    </div>
+  <body data-page="points-calculator">
+    <div id="sharedHeader"></div>
 
     <main class="calc-layout">
       <section class="calc-card">
@@ -171,6 +158,7 @@
       </svg>
     </button>
 
+    <script src="../scripts/shared-header.js"></script>
     <script src="../scripts/points-calculator.js"></script>
   </body>
 </html>

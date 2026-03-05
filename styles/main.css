@@ -158,6 +158,9 @@ body {
 }
 .header-menu {
   margin-top: 1rem;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.55rem;
 }
 .header-menu-link {
   display: inline-block;
@@ -173,6 +176,11 @@ body {
 .header-menu-link:hover {
   background: rgba(255, 255, 255, 0.14);
   border-color: rgba(255, 255, 255, 0.55);
+}
+.header-menu-link.active,
+.header-menu-link[aria-current="page"] {
+  background: rgba(255, 255, 255, 0.22);
+  border-color: rgba(255, 255, 255, 0.75);
 }
 .header-year {
   font-size: 6rem;
