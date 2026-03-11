@@ -1,17 +1,23 @@
 const CACHE_TTL_MS = 60 * 60 * 1000;
-const CACHE_KEY = "male-rankings-cache-v1";
-
-const tbody = document.getElementById("maleRankingsBody");
-const meta = document.getElementById("maleRankingsMeta");
-const prevPageBtn = document.getElementById("malePrevPage");
-const nextPageBtn = document.getElementById("maleNextPage");
-const pageInfo = document.getElementById("malePageInfo");
-const searchInput = document.getElementById("maleSearch");
-const levelFilter = document.getElementById("maleFilterLevel");
-const ageFilter = document.getElementById("maleFilterAge");
-const clubFilter = document.getElementById("maleFilterClub");
-
 const ROWS_PER_PAGE = 100;
+
+const pageKey = document.body?.dataset?.page || "male-abs-rankings";
+const isFemale = pageKey === "female-abs-rankings";
+const prefix = isFemale ? "female" : "male";
+const sourceDir = isFemale ? "female" : "male";
+const cacheKey = `${prefix}-rankings-cache-v1`;
+const embedKey = isFemale ? "FEMALE_RANKINGS_EMBED" : "MALE_RANKINGS_EMBED";
+
+const tbody = document.getElementById(`${prefix}RankingsBody`);
+const meta = document.getElementById(`${prefix}RankingsMeta`);
+const prevPageBtn = document.getElementById(`${prefix}PrevPage`);
+const nextPageBtn = document.getElementById(`${prefix}NextPage`);
+const pageInfo = document.getElementById(`${prefix}PageInfo`);
+const searchInput = document.getElementById(`${prefix}Search`);
+const levelFilter = document.getElementById(`${prefix}FilterLevel`);
+const ageFilter = document.getElementById(`${prefix}FilterAge`);
+const clubFilter = document.getElementById(`${prefix}FilterClub`);
+
 let currentPage = 1;
 let sortedRows = [];
 let filteredRows = [];
@@ -28,8 +34,8 @@ const parseRankingNumber = (value) => {
   return Number.isFinite(asNumber) ? asNumber : Number.MAX_SAFE_INTEGER;
 };
 
-const embedded = window.MALE_RANKINGS_EMBED;
-const newestFile = String(embedded?.file || "2025-11-18.json");
+const embedded = window[embedKey];
+const newestFile = String(embedded?.file || "latest.json");
 const isFileProtocol = window.location.protocol === "file:";
 
 const formatFileDate = (fileName) => {
@@ -41,7 +47,7 @@ const formatFileDate = (fileName) => {
 
 const readCache = () => {
   try {
-    const raw = localStorage.getItem(CACHE_KEY);
+    const raw = localStorage.getItem(cacheKey);
     if (!raw) return null;
     const parsed = JSON.parse(raw);
     if (!parsed || parsed.file !== newestFile) return null;
@@ -55,7 +61,7 @@ const readCache = () => {
 
 const writeCache = (data) => {
   try {
-    localStorage.setItem(CACHE_KEY, JSON.stringify({
+    localStorage.setItem(cacheKey, JSON.stringify({
       file: newestFile,
       timestamp: Date.now(),
       data,
@@ -85,36 +91,9 @@ const fillSelectOptions = (selectElement, values, allLabel) => {
   }
 };
 
-const applyFilters = () => {
-  const query = String(searchInput?.value || "").trim().toLowerCase();
-  const levelValue = levelFilter?.value || "all";
-  const ageValue = ageFilter?.value || "all";
-  const clubValue = clubFilter?.value || "all";
-
-  filteredRows = sortedRows.filter((player) => {
-    const name = String(player?.Name || "");
-    const club = String(player?.Club || "");
-    const level = String(player?.Level || "");
-    const age = String(player?.AgeType || "");
-
-    const matchesSearch = !query ||
-      name.toLowerCase().includes(query) ||
-      club.toLowerCase().includes(query);
-    const matchesLevel = levelValue === "all" || level === levelValue;
-    const matchesAge = ageValue === "all" || age === ageValue;
-    const matchesClub = clubValue === "all" || club === clubValue;
-
-    return matchesSearch && matchesLevel && matchesAge && matchesClub;
-  });
-
-  currentPage = 1;
-  renderCurrentPage();
-
-  const baseText = `Fonte: FPP (${formatFileDate(newestFile)})`;
-  meta.textContent = `${baseText} · ${filteredRows.length} / ${sortedRows.length} atletas`;
-};
-
 const renderCurrentPage = () => {
+  if (!tbody) return;
+
   if (!filteredRows.length) {
     tbody.innerHTML = '<tr><td colspan="8">Sem dados disponíveis de momento.</td></tr>';
     if (pageInfo) pageInfo.textContent = "Página 0 de 0";
@@ -148,6 +127,37 @@ const renderCurrentPage = () => {
   if (nextPageBtn) nextPageBtn.disabled = currentPage >= totalPages;
 };
 
+const applyFilters = () => {
+  const query = String(searchInput?.value || "").trim().toLowerCase();
+  const levelValue = levelFilter?.value || "all";
+  const ageValue = ageFilter?.value || "all";
+  const clubValue = clubFilter?.value || "all";
+
+  filteredRows = sortedRows.filter((player) => {
+    const name = String(player?.Name || "");
+    const club = String(player?.Club || "");
+    const level = String(player?.Level || "");
+    const age = String(player?.AgeType || "");
+
+    const matchesSearch = !query ||
+      name.toLowerCase().includes(query) ||
+      club.toLowerCase().includes(query);
+    const matchesLevel = levelValue === "all" || level === levelValue;
+    const matchesAge = ageValue === "all" || age === ageValue;
+    const matchesClub = clubValue === "all" || club === clubValue;
+
+    return matchesSearch && matchesLevel && matchesAge && matchesClub;
+  });
+
+  currentPage = 1;
+  renderCurrentPage();
+
+  if (meta) {
+    const baseText = `Fonte: FPP (${formatFileDate(newestFile)})`;
+    meta.textContent = `${baseText} · ${filteredRows.length} / ${sortedRows.length} atletas`;
+  }
+};
+
 const renderRows = (rows) => {
   sortedRows = [...rows].sort(
     (a, b) => parseRankingNumber(a.Ranking) - parseRankingNumber(b.Ranking),
@@ -175,21 +185,10 @@ if (nextPageBtn) {
   });
 }
 
-if (searchInput) {
-  searchInput.addEventListener("input", applyFilters);
-}
-
-if (levelFilter) {
-  levelFilter.addEventListener("change", applyFilters);
-}
-
-if (ageFilter) {
-  ageFilter.addEventListener("change", applyFilters);
-}
-
-if (clubFilter) {
-  clubFilter.addEventListener("change", applyFilters);
-}
+if (searchInput) searchInput.addEventListener("input", applyFilters);
+if (levelFilter) levelFilter.addEventListener("change", applyFilters);
+if (ageFilter) ageFilter.addEventListener("change", applyFilters);
+if (clubFilter) clubFilter.addEventListener("change", applyFilters);
 
 const loadRankings = async () => {
   if (embedded && Array.isArray(embedded.data) && embedded.file === newestFile) {
@@ -205,13 +204,17 @@ const loadRankings = async () => {
   }
 
   if (isFileProtocol) {
-    meta.textContent = "Sem dados carregados: verifica se ../data/rankings/male/latest.js existe e define window.MALE_RANKINGS_EMBED.";
-    tbody.innerHTML = '<tr><td colspan="8">Modo estático ativo. Não foi encontrado dataset embebido.</td></tr>';
+    if (meta) {
+      meta.textContent = `Sem dados carregados: verifica se ../data/rankings/${sourceDir}/latest.js existe e define window.${embedKey}.`;
+    }
+    if (tbody) {
+      tbody.innerHTML = '<tr><td colspan="8">Modo estático ativo. Não foi encontrado dataset embebido.</td></tr>';
+    }
     return;
   }
 
   try {
-    const response = await fetch(`../data/rankings/male/${newestFile}`, {
+    const response = await fetch(`../data/rankings/${sourceDir}/${newestFile}`, {
       cache: "no-cache",
     });
     if (!response.ok) throw new Error(`HTTP ${response.status}`);
@@ -220,8 +223,10 @@ const loadRankings = async () => {
     writeCache(data);
     renderRows(data);
   } catch {
-    meta.textContent = "Não foi possível carregar o ranking.";
-    tbody.innerHTML = '<tr><td colspan="8">Sem dados disponíveis de momento.</td></tr>';
+    if (meta) meta.textContent = "Não foi possível carregar o ranking.";
+    if (tbody) {
+      tbody.innerHTML = '<tr><td colspan="8">Sem dados disponíveis de momento.</td></tr>';
+    }
   }
 };
 

@@ -15,8 +15,13 @@
         },
         {
           key: "male-abs-rankings",
-          label: "Ranking Masculino",
+          label: "Ranking ABS Masculino",
           href: "./male-rankings.html",
+        },
+        {
+          key: "female-abs-rankings",
+          label: "Ranking ABS Feminino",
+          href: "./female-rankings.html",
         },
       ]
     : [
@@ -28,8 +33,13 @@
         },
         {
           key: "male-abs-rankings",
-          label: "Ranking Masculino",
+          label: "Ranking ABS Masculino",
           href: "./content/male-rankings.html",
+        },
+        {
+          key: "female-abs-rankings",
+          label: "Ranking ABS Feminino",
+          href: "./content/female-rankings.html",
         },
       ];
 
@@ -37,6 +47,7 @@
     calendar: "Calendário",
     "points-calculator": "Calculadora de Pontos",
     "male-abs-rankings": "Ranking Absoluto Masculino",
+    "female-abs-rankings": "Ranking Absoluto Feminino",
   };
 
   const menuHtml = links
