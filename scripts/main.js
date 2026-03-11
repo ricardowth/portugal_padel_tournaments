@@ -1,31 +1,3 @@
-// --- Theme Toggle ---
-const themeToggle = document.getElementById("themeToggle");
-const sunIcon = document.getElementById("sunIcon");
-const moonIcon = document.getElementById("moonIcon");
-const html = document.documentElement;
-
-const savedTheme = localStorage.getItem("theme") || "light";
-html.setAttribute("data-theme", savedTheme);
-if (savedTheme === "dark") {
-  sunIcon.style.display = "none";
-  moonIcon.style.display = "block";
-}
-
-themeToggle.addEventListener("click", () => {
-  const current = html.getAttribute("data-theme");
-  const newTheme = current === "dark" ? "light" : "dark";
-  html.setAttribute("data-theme", newTheme);
-  localStorage.setItem("theme", newTheme);
-
-  if (newTheme === "dark") {
-    sunIcon.style.display = "none";
-    moonIcon.style.display = "block";
-  } else {
-    sunIcon.style.display = "block";
-    moonIcon.style.display = "none";
-  }
-});
-
 // --- Set current month ---
 const currentMonth = new Date().getMonth();
 document.getElementById("monthFrom").value = currentMonth;

@@ -932,6 +932,56 @@ select {
   color: var(--text);
 }
 
+.rankings-layout {
+  max-width: 1200px;
+}
+
+.rankings-table {
+  min-width: 980px;
+}
+
+.rankings-table th,
+.rankings-table td {
+  white-space: nowrap;
+}
+
+.rankings-table th:nth-child(3),
+.rankings-table td:nth-child(3),
+.rankings-table th:nth-child(5),
+.rankings-table td:nth-child(5) {
+  text-align: left;
+}
+
+.rankings-table tbody tr:nth-child(even) {
+  background: var(--card-cats-bg);
+}
+
+.rankings-table tbody tr:hover {
+  background: var(--section-hover);
+}
+
+.rankings-pagination {
+  margin-top: 0.9rem;
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 0.6rem;
+}
+
+.rankings-page-info {
+  font-size: 0.82rem;
+  color: var(--text-light);
+  min-width: 95px;
+  text-align: center;
+}
+
+.rankings-filters {
+  display: grid;
+  grid-template-columns: 1.3fr 1fr 1fr 1fr;
+  gap: 0.6rem;
+  margin-bottom: 0.9rem;
+}
+
 @media (max-width: 600px) {
   .header h1 {
     font-size: 2rem;
@@ -966,6 +1016,9 @@ select {
     height: 48px;
   }
   .calc-grid {
+    grid-template-columns: 1fr;
+  }
+  .rankings-filters {
     grid-template-columns: 1fr;
   }
 }

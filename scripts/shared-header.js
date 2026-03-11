@@ -13,6 +13,11 @@
           label: "Calculadora de Pontos",
           href: "./points-calculator.html",
         },
+        {
+          key: "male-abs-rankings",
+          label: "Ranking Masculino",
+          href: "./male-rankings.html",
+        },
       ]
     : [
         { key: "calendar", label: "Calendário", href: "./index.html" },
@@ -21,11 +26,17 @@
           label: "Calculadora de Pontos",
           href: "./content/points-calculator.html",
         },
+        {
+          key: "male-abs-rankings",
+          label: "Ranking Masculino",
+          href: "./content/male-rankings.html",
+        },
       ];
 
   const subtitles = {
     calendar: "Calendário",
     "points-calculator": "Calculadora de Pontos",
+    "male-abs-rankings": "Ranking Absoluto Masculino",
   };
 
   const menuHtml = links
