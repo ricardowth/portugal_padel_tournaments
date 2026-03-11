@@ -47,6 +47,28 @@ const formatRankingChange = (value) => {
   return raw;
 };
 
+const getTiePlayerUrl = (playerId) => {
+  const normalizedId = String(playerId ?? "").trim();
+  if (!normalizedId) return "";
+  return `https://www.tiepadel.com/Advanced-stats/${encodeURIComponent(normalizedId)}`;
+};
+
+const getTiePadelDashboardUrl = (playerId) => {
+  const normalizedId = String(playerId ?? "").trim();
+  if (!normalizedId) return "";
+  return `https://www.tiepadel.com/Dashboard.aspx?id=${encodeURIComponent(normalizedId)}`;
+};
+
+const renderLicenceCell = (player) => {
+  const licenceNumber = String(player?.LicenceNumber ?? "").trim();
+  if (!licenceNumber) return "-";
+
+  const url = getTiePadelDashboardUrl(player?.PlayerID);
+  if (!url) return escapeHtml(licenceNumber);
+
+  return `<a href="${escapeHtml(url)}" target="_blank" rel="noopener noreferrer">${escapeHtml(licenceNumber)}</a>`;
+};
+
 const isYouthAgeType = (value) => {
   const normalized = normalizeSearchText(value).replaceAll(" ", "");
   return normalized.startsWith("sub") || normalized.startsWith("jov");
@@ -145,7 +167,7 @@ const writeCache = (config, data) => {
 
 const renderCurrentPage = () => {
   if (!filteredRows.length) {
-    tbody.innerHTML = '<tr><td colspan="8">Sem dados disponíveis de momento.</td></tr>';
+    tbody.innerHTML = '<tr><td colspan="10">Sem dados disponíveis de momento.</td></tr>';
     if (pageInfo) pageInfo.textContent = "Página 0 de 0";
     if (prevPageBtn) prevPageBtn.disabled = true;
     if (nextPageBtn) nextPageBtn.disabled = true;
@@ -163,12 +185,16 @@ const renderCurrentPage = () => {
     <tr>
       <td>${escapeHtml(player.Ranking)}</td>
       <td>${escapeHtml(formatRankingChange(player.RankingChange))}</td>
+      <td>${renderLicenceCell(player)}</td>
       <td>${escapeHtml(player.Name)}</td>
       <td>${escapeHtml(player.Points)}</td>
       <td>${escapeHtml(player.Club || "-")}</td>
       <td>${escapeHtml(player.Level)}</td>
       <td>${escapeHtml(player.AgeType)}</td>
       <td>${escapeHtml(player.NumberOfValidTournaments)}</td>
+      <td>${getTiePlayerUrl(player.PlayerID)
+        ? `<a href="${escapeHtml(getTiePlayerUrl(player.PlayerID))}" target="_blank" rel="noopener noreferrer">Ver</a>`
+        : "-"}</td>
     </tr>
   `).join("");
 
@@ -265,7 +291,7 @@ const loadRankings = async () => {
       meta.textContent = `Sem dados carregados: verifica se ../data/rankings/${config.source}/latest.js existe e define window.${config.embedKey}.`;
     }
     if (tbody) {
-      tbody.innerHTML = '<tr><td colspan="8">Modo estático ativo. Não foi encontrado dataset embebido.</td></tr>';
+      tbody.innerHTML = '<tr><td colspan="10">Modo estático ativo. Não foi encontrado dataset embebido.</td></tr>';
     }
     return;
   }
@@ -282,7 +308,7 @@ const loadRankings = async () => {
   } catch {
     if (meta) meta.textContent = "Não foi possível carregar o ranking.";
     if (tbody) {
-      tbody.innerHTML = '<tr><td colspan="8">Sem dados disponíveis de momento.</td></tr>';
+      tbody.innerHTML = '<tr><td colspan="10">Sem dados disponíveis de momento.</td></tr>';
     }
   }
 };
