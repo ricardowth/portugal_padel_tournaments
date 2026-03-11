@@ -319,6 +319,26 @@
         }
     },
     {
+        "name": "XII Open PSC",
+        "prize": "2.000",
+        "location": "Sintra",
+        "start_date": "2026-03-27",
+        "end_date": "2026-03-29",
+        "organization": "Padel Sports Club",
+        "age_group": "ABS",
+        "fip_data": {
+            "level": "",
+            "categories": "",
+            "link": ""
+        },
+        "fpp_data": {
+            "points": 2000,
+            "categories": "F3-F5; M3-M5",
+            "link": "https://fpp.tiepadel.com/Tournaments/XIIOpenPSCbyAguasdoCaramulo",
+            "level": "c2k"
+        }
+    },
+    {
         "name": "FIP Promises Elvas",
         "location": "Elvas",
         "start_date": "2026-03-27",
