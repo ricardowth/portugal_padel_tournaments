@@ -34,6 +34,25 @@ const parseRankingNumber = (value) => {
   return Number.isFinite(asNumber) ? asNumber : Number.MAX_SAFE_INTEGER;
 };
 
+const normalizeSearchText = (value) => String(value ?? "")
+  .normalize("NFD")
+  .replace(/[\u0300-\u036f]/g, "")
+  .toLowerCase();
+
+const formatRankingChange = (value) => {
+  const raw = String(value ?? "").trim();
+  if (!raw) return "-";
+  if (raw === "-") return raw;
+  if (raw.startsWith("+") || raw.startsWith("-")) return raw;
+
+  const numeric = Number(raw.replace(",", "."));
+  if (Number.isFinite(numeric) && numeric > 0) {
+    return `+${raw}`;
+  }
+
+  return raw;
+};
+
 const embedded = window[embedKey];
 const newestFile = String(embedded?.file || "latest.json");
 const isFileProtocol = window.location.protocol === "file:";
@@ -76,6 +95,30 @@ const uniqueSortedValues = (rows, key) => [...new Set(rows
   .filter(Boolean))]
   .sort((a, b) => a.localeCompare(b, "pt"));
 
+const isYouthAgeType = (value) => {
+  const normalized = normalizeSearchText(value).replaceAll(" ", "");
+  return normalized.startsWith("sub") || normalized.startsWith("jov");
+};
+
+const sortAgeTypes = (values) => [...values].sort((a, b) => {
+  const aNorm = normalizeSearchText(a).replaceAll(" ", "");
+  const bNorm = normalizeSearchText(b).replaceAll(" ", "");
+
+  const aPriority = aNorm === "abs"
+    ? 0
+    : isYouthAgeType(a)
+      ? 1
+      : 2;
+  const bPriority = bNorm === "abs"
+    ? 0
+    : isYouthAgeType(b)
+      ? 1
+      : 2;
+
+  if (aPriority !== bPriority) return aPriority - bPriority;
+  return a.localeCompare(b, "pt");
+});
+
 const fillSelectOptions = (selectElement, values, allLabel) => {
   if (!selectElement) return;
   const current = selectElement.value || "all";
@@ -112,7 +155,7 @@ const renderCurrentPage = () => {
   tbody.innerHTML = pageRows.map((player) => `
     <tr>
       <td>${escapeHtml(player.Ranking)}</td>
-      <td>${escapeHtml(player.RankingChange)}</td>
+      <td>${escapeHtml(formatRankingChange(player.RankingChange))}</td>
       <td>${escapeHtml(player.Name)}</td>
       <td>${escapeHtml(player.Points)}</td>
       <td>${escapeHtml(player.Club || "-")}</td>
@@ -128,7 +171,10 @@ const renderCurrentPage = () => {
 };
 
 const applyFilters = () => {
-  const query = String(searchInput?.value || "").trim().toLowerCase();
+  const queryTerms = String(searchInput?.value || "")
+    .split(",")
+    .map((term) => normalizeSearchText(term.trim()))
+    .filter(Boolean);
   const levelValue = levelFilter?.value || "all";
   const ageValue = ageFilter?.value || "all";
   const clubValue = clubFilter?.value || "all";
@@ -138,10 +184,13 @@ const applyFilters = () => {
     const club = String(player?.Club || "");
     const level = String(player?.Level || "");
     const age = String(player?.AgeType || "");
+    const normalizedName = normalizeSearchText(name);
+    const normalizedClub = normalizeSearchText(club);
 
-    const matchesSearch = !query ||
-      name.toLowerCase().includes(query) ||
-      club.toLowerCase().includes(query);
+    const matchesSearch = queryTerms.length === 0 ||
+      queryTerms.some((term) =>
+        normalizedName.includes(term) || normalizedClub.includes(term)
+      );
     const matchesLevel = levelValue === "all" || level === levelValue;
     const matchesAge = ageValue === "all" || age === ageValue;
     const matchesClub = clubValue === "all" || club === clubValue;
@@ -164,7 +213,7 @@ const renderRows = (rows) => {
   );
 
   fillSelectOptions(levelFilter, uniqueSortedValues(sortedRows, "Level"), "Todos os níveis");
-  fillSelectOptions(ageFilter, uniqueSortedValues(sortedRows, "AgeType"), "Todos os escalões");
+  fillSelectOptions(ageFilter, sortAgeTypes(uniqueSortedValues(sortedRows, "AgeType")), "Todos os escalões");
   fillSelectOptions(clubFilter, uniqueSortedValues(sortedRows, "Club"), "Todos os clubes");
 
   currentPage = 1;
