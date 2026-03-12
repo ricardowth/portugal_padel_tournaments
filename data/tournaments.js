@@ -314,7 +314,7 @@
         "fpp_data": {
             "points": 2000,
             "categories": "F2-F5; M2-M5",
-            "link": "",
+            "link": "https://fpp.tiepadel.com/Tournaments/OpenLemonfitAbsolutos/Overview",
             "level": "c2k"
         }
     },
